@@ -47,14 +47,14 @@ function parseHtml(html){
                 let runs = $(colsinEVeryRow[2]).text();
                 let balls = $(colsinEVeryRow[3]).text();
                 
-                // console.log(`${pName} of ${teamName} scored ${runs} in ${balls} balls`);
+                console.log(`${pName} of ${teamName} scored ${runs} in ${balls} balls`);
                 handlePlayer(pName, teamName, runs, balls);
             }
         }
 
         console.log("```````````````");
     }
-    // console.log("###################");
+    console.log("###################");
    
 }
 

@@ -1,12 +1,10 @@
-// npm install request
-// to make a request to any server
-// node inbuilt module 
 let fs = require("fs");
 // request to any server=> using nodejs
+
 let request = require("request");
 // parse html
 let cheerio = require("cheerio");
-let eachMatchHandler = require("./match");
+let eachMatchHandler = require("./getLeaderBoard");
 
 request("https://www.espncricinfo.com/series/_/id/8039/season/2015/icc-cricket-world-cup", dataReciever);
 function dataReciever(err, res, html) {
