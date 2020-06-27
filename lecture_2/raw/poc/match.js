@@ -84,8 +84,8 @@ function handlePlayer(pName, teamName, runs, balls){
     if(isdirPresent == false){
         createDirectory(teamName);
     }
-
-    let filePath = path.join(__dirname, teamName, pName+".json");
+    let filePath = path.join(__dirname, teamName, pName+".Json");
+    // let filePath = path.join(__dirname, teamName, pName+".xls");
     let isthereFile = checkWetherFilePresent(filePath);
     if(isthereFile == false) {
         createfile(filePath);
@@ -95,7 +95,16 @@ function handlePlayer(pName, teamName, runs, balls){
         newObj.Balls=balls;
         entries.push(newObj);
         let stringObj = JSON.stringify(entries);
+
         fs.writeFileSync(filePath, stringObj);
+        // var data='';
+        // for (var i = 0; i < entries.length; i++) {
+        //     data=data+ entries[i].Runs+'\t'+entries[i].Balls+'\t'+'\n';
+        // }
+
+        // // 
+        // fs.writeFileSync(filePath, data);
+
     }
     else{
         let content = fs.readFileSync(filePath,"utf-8");
@@ -106,6 +115,14 @@ function handlePlayer(pName, teamName, runs, balls){
         entries.push(newObj);
         let stringObj = JSON.stringify(entries);
         fs.writeFileSync(filePath, stringObj);
+
+        // var data='';
+        // for (var i = 0; i < entries.length; i++) {
+        //     data=data+ entries[i].Runs+'\t'+entries[i].Balls+'\t'+'\n';
+        // }
+
+        // 
+        // fs.writeFileSync(filePath, data);
     }
 
 }
