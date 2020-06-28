@@ -69,14 +69,16 @@ GWillBeOpendP.then(function () {
         return allHrefPArr;
     }).then(function (hrefArr) {
         let firstQWillBeSubmitP = questionSubmitter(hrefArr[0]);
-        for(let i=0;i < hrefpArr.length; i++){
-            firstQWillBeSubmitP = firstQWillBeSubmitP.then(function (){
+        for (let i = 1; i < hrefArr.length; i++) {
+            firstQWillBeSubmitP = firstQWillBeSubmitP.then(function () {
                 let qsp = questionSubmitter(hrefArr[i]);
                 return qsp;
             })
-
         }
+        
         return firstQWillBeSubmitP;
+    }).then(function(){
+        console.log("All question submitted");
     })
    
     .catch(function (err) {
