@@ -11,7 +11,7 @@ async function fn() {
     await tab.goto("https://www.hackerrank.com/auth/login?h_l=body_middle_left_button&h_r=login");
     await tab.type("#input-1", "bovel83741@openavz.com");
     await tab.type("#input-2", "1234567");
-    
+    // await tab.click("button.auth-button"),
 
     await Promise.all([
         tab.waitForNavigation({ waitUntil: "networkidle0" }),
@@ -30,6 +30,8 @@ async function fn() {
 
     let createChallengePageLink = await tab.url();
     console.log(createChallengePageLink);
+
+    await browser.close();
 }
 
 fn();
