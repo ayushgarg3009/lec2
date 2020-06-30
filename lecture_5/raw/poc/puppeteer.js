@@ -15,11 +15,21 @@ async function fn() {
 
     await Promise.all([
         tab.waitForNavigation({ waitUntil: "networkidle0" }),
-        await tab.click("button.auth-button"),
+        tab.click("button.auth-button"),
     ]);
     
 
     await tab.click('a[data-analytics="NavBarProfileDropDown"]');
+    await Promise.all([
+        tab.waitForNavigation({ waitUntil: "networkidle0" }),
+        tab.click('a[data-analytics="NavBarProfileDropDownAdministration"]'),
+    ]);
+
+    let liArr = await tab.$$("ul.nav-tabs li");
+    await liArr[1].click();   
+
+    let createChallengePageLink = await tab.url();
+    console.log(createChallengePageLink);
 }
 
 fn();
