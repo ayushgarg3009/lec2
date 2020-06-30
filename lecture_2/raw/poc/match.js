@@ -21,9 +21,6 @@ function dataReceiver(err, res, html) {
 }
 
 
-
-
-
 function parseHtml(html){
     
     let $ = cheerio.load(html);
