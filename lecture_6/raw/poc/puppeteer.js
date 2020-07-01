@@ -77,51 +77,51 @@ async function handleSinglePage(tab, browser){
 
 fn();
 
-// async function questionSolver(cLink, newTab){
-//     await newTab.goto(cLink);
-//     newTab.waitForSelector("li[data-tab='moderators']", { visible: true });
-//     await Promise.all([newTab.click("li[data-tab='moderators']"), newTab.waitForNavigation({ waitUntil: "networkidle0" })]);
-//     newTab.waitForSelector("#moderator", { visible: true })
-//     await newTab.type("#moderator", "Ashish2");
-//     await newTab.keyboard.press("Enter");
-//     await newTab.click(".save-challenge.btn.btn-green");
-//     await newTab.close();
-// }
-
-function questionSolver(cLink, newTab) {
-    return new Promise(function (resolve, reject) {
-        newTab.goto(cLink, { waitUntil: "networkidle0" }).
-            then(function () {
-                let waitForModerator = newTab.waitForSelector("li[data-tab='moderators']", { visible: true });
-                return waitForModerator;
-            })
-            .then(function () {
-              
-                let navigationPromise = Promise.all([newTab.click("li[data-tab='moderators']"), newTab.waitForNavigation({ waitUntil: "networkidle0" })])
-                return navigationPromise
-        
-            }).then(function () {
-                let waitForModeratorP = newTab.waitForSelector("#moderator", { visible: true })
-                return waitForModeratorP;
-            }).then(function () {
-                let keyWillEnteredP = newTab.type("#moderator", "Ashish");
-                return keyWillEnteredP;
-            }).then(function () {
-                let waitForEnterP = newTab.keyboard.press("Enter");
-                return waitForEnterP;
-            }).then(function () {
-                let waitForClick = newTab.click(".save-challenge.btn.btn-green");
-                return waitForClick;
-            }).then(function () {
-                let waitForTabToCloseP = newTab.close();
-                return waitForTabToCloseP;
-            })
-            .then(function () {
-                console.log("After");
-                resolve();
-            }).catch(function (err) {
-                reject(err);
-            })
-    })
-
+async function questionSolver(cLink, newTab){
+    await newTab.goto(cLink,{ waitUntil: "networkidle0" });
+    await newTab.waitForSelector("li[data-tab='moderators']", { visible: true });
+    await Promise.all([newTab.click("li[data-tab='moderators']"), newTab.waitForNavigation({ waitUntil: "networkidle0" })]);
+    await newTab.waitForSelector("#moderator", { visible: true })
+    await newTab.type("#moderator", "Ashish2");
+    await newTab.keyboard.press("Enter");
+    await newTab.click(".save-challenge.btn.btn-green");
+    await newTab.close();
 }
+
+// function questionSolver(cLink, newTab) {
+//     return new Promise(function (resolve, reject) {
+//         newTab.goto(cLink, { waitUntil: "networkidle0" }).
+//             then(function () {
+//                 let waitForModerator = newTab.waitForSelector("li[data-tab='moderators']", { visible: true });
+//                 return waitForModerator;
+//             })
+//             .then(function () {
+              
+//                 let navigationPromise = Promise.all([newTab.click("li[data-tab='moderators']"), newTab.waitForNavigation({ waitUntil: "networkidle0" })])
+//                 return navigationPromise
+        
+//             }).then(function () {
+//                 let waitForModeratorP = newTab.waitForSelector("#moderator", { visible: true })
+//                 return waitForModeratorP;
+//             }).then(function () {
+//                 let keyWillEnteredP = newTab.type("#moderator", "Ashish");
+//                 return keyWillEnteredP;
+//             }).then(function () {
+//                 let waitForEnterP = newTab.keyboard.press("Enter");
+//                 return waitForEnterP;
+//             }).then(function () {
+//                 let waitForClick = newTab.click(".save-challenge.btn.btn-green");
+//                 return waitForClick;
+//             }).then(function () {
+//                 let waitForTabToCloseP = newTab.close();
+//                 return waitForTabToCloseP;
+//             })
+//             .then(function () {
+//                 console.log("After");
+//                 resolve();
+//             }).catch(function (err) {
+//                 reject(err);
+//             })
+//     })
+
+// }
