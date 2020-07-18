@@ -55,12 +55,13 @@ $(document).ready(function () {
             $("#underline").removeClass("isOn")
         }
 
+        // // $(".menu-group a[halign='cellObject.halign']").addClass("isOn");
         // if (cellObject.halign) {
+        //     // $(".menu-group a[halign='cellObject.halign']").addClass("isOn");
         //     $(".menu-group").addClass("isOn");
-        //     // $(".menu-group).removeClass("isOn");
         // } else {
+        //     // $(".menu-group a[halign='cellObject.halign']").reoveClass("isOn");
         //     $(".menu-group").removeClass("isOn");
-        //     // $(".menu-group input[type='button']").addClass("isOn");
         // }
 
         lcell = this;
@@ -125,6 +126,7 @@ $(document).ready(function () {
     })
 
     $(".menu-group input[type='button']").on("click", function () {
+        $(".menu-group input[type='button']").removeClass("isOn");
         $(this).toggleClass("isOn");
         let halign = $(this).hasClass("isOn");
         // console.log($(this).attr("halign"))
@@ -205,7 +207,16 @@ $(document).ready(function () {
             let AllCols = $(AllRows[i]).find(".cell");
             for (let j = 0; j < AllCols.length; j++) {
                 //    DB
-                $(`#grid .cell[r-id=${i}][c-id=${j}]`).html(db[i][j].value);
+                let cell = db[i][j];
+                $(AllCols[j]).html(cell.value);
+                $(AllCols[j]).css("font-weight", cell.bold ? "bolder" : "normal");
+                $(AllCols[j]).css("font-style", cell.italic ? "italic" : "normal");
+                $(AllCols[j]).css("text-decoration", cell.underline ? "underline" : "none");
+                $(AllCols[j]).css("font-family", cell.fontFamily);
+                $(AllCols[j]).css("font-size", cell.fontSize);
+                $(AllCols[j]).css("color", cell.textColor);
+                $(AllCols[j]).css("background-color", cell.bgColor);
+                $(AllCols[j]).css("text-align", cell.halign);
             }
         }
     })
