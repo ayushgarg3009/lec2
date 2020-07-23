@@ -1,3 +1,4 @@
+dcd
 html,body{
     padding: 0px;
     margin: 0px;
@@ -8,7 +9,7 @@ html,body{
 body{
     background-image: url("3.gif");
     background-size: cover;
-    height: 100vh;
+    height: 100vh; 
 }
 .paddle{
     border-radius: 20px;
