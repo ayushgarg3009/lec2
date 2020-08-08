@@ -2,11 +2,14 @@ const $ = require("jquery");
 const path = require("path");
 const fs = require("fs");
 const pty = require('node-pty');
-const os=require("os");
+const os = require("os");
 const Terminal = require('xterm').Terminal;
+let { FitAddon } = require('xterm-addon-fit');
+// Make the terminal's size and geometry fit the size of #terminal-container
 let myMonaco, editor;
+let tabArr={};
+let glp;
 require("jstree");
-let tabArr = {};
 $(document).ready(async function () {
     editor = await createEditor();
     // console.log(editor);
@@ -23,7 +26,10 @@ $(document).ready(async function () {
     $("#tree").jstree({
         "core": {
             "check_callback": true,
-            "data": data
+            "data": data,
+            "themes": {
+                "icons": false
+            }
         },
     }).on("open_node.jstree", function (e, onClickdata) {
         console.log(onClickdata);
@@ -51,6 +57,7 @@ $(document).ready(async function () {
         }
     }).on("select_node.jstree", function (e, dataObj) {
         let fPath = dataObj.node.id;
+        glp=fPath;
         let isFile = fs.lstatSync(fPath).isFile();
         if (isFile) {
             setData(fPath);
@@ -74,17 +81,73 @@ $(document).ready(async function () {
 
     // Initialize xterm.js and attach it to the DOM
     const xterm = new Terminal();
+    const fitAddon = new FitAddon();
+    xterm.loadAddon(fitAddon);
+    xterm.setOption('theme', {
+        background: "rebeccapurple",
+
+    });
+    // Open the terminal in #terminal-container
     xterm.open(document.getElementById('terminal'));
     // Setup communication between xterm.js and node-pty
     xterm.onData(function (data) {
         ptyProcess.write(data);
-        ptyProcess.on('data', function (data) {
-            xterm.write(data);
-        });
-
     })
-})
+    ptyProcess.on('data', function (data) {
+        xterm.write(data);
+    });
+    fitAddon.fit();
 
+    // myMonaco.editor.defineTheme('myCustomTheme', {
+    //     base: 'vs', // can also be vs-dark or hc-black
+    //     inherit: true, // can also be false to completely replace the builtin rules
+    //     rules: [
+    //         { token: 'comment', foreground: 'ffa500', fontStyle: 'italic underline' },
+    //         { token: 'comment.js', foreground: '008800', fontStyle: 'bold' },
+    //         { token: 'comment.css', foreground: '0000ff' } // will inherit fontStyle from `comment` above
+    //     ],
+    //     colors: {
+    //         'editor.foreground': '#000000',
+    //         'editor.background': '#EDF9FA',
+    //         'editorCursor.foreground': '#8B0000',
+    //         'editor.lineHighlightBackground': '#0000FF20',
+    //         'editorLineNumber.foreground': '#008800',
+    //         'editor.selectionBackground': '#88000030',
+    //         'editor.inactiveSelectionBackground': '#88000015'
+    //     }
+    // });
+    // setTimeout(function () {
+    // }, 2000);
+    let isDark = false;
+    $("#theme").on("click", function () {
+        if (isDark) {
+            myMonaco.editor.setTheme("vs");
+        } else {
+            myMonaco.editor.setTheme("vs-dark");
+        }
+        isDark = !isDark;
+    })
+
+    $("#New").on("click", function (){
+        createNewTab(glp);
+    })
+
+    // $("#Save").on("click", async function () {
+    //     let sdb = await dialog.showOpenDialog();
+    //     let fp = sdb.filePaths[0];
+    //     if (fp == undefined) {
+    //         console.log("Please select file first");
+    //         return;
+    //     }
+    //     let jsonData = JSON.stringify(db);
+    //     fs.writeFileSync(fp, jsonData);
+    //     // open dialogBox
+    //     // select file
+    //     // write 
+    //     // Input=> file
+    // })
+
+})
 // { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" }
 function addCh(parentPath) {
     let isDir = fs.lstatSync(parentPath).isDirectory();
@@ -134,13 +197,18 @@ function createEditor() {
                     '\tconsole.log("Hello world!");',
                     '}'
                 ].join('\n'),
-                language: 'javascript'
+                language: 'javascript',
+                automaticLayout: true
             });
             myMonaco = monaco;
             resolve(editor);
         });
     })
-
+    function save() {
+        // get the value of the data
+        var value = window.editor.getValue()
+        saveValueSomewhere(value);     
+     }
 
 }
 function setData(fPath) {
@@ -164,6 +232,17 @@ function createTab(fPath) {
         tabArr[fPath] = fName;
     }
 }
+
+// function createNewTab(fPath) {
+//     let n = undefined;
+
+//         $("#tabs-row").append(`<div class="tab">
+//         <div class="tab-name" id=${fPath} onclick=handleTab(this)>${n}</div>
+//         <i class="fas fa-times" id=${fPath} onclick=handleClose(this)></i>
+//         </div>`);
+//         createEditor();
+// }
+
 function handleTab(elem) {
     let fPath = $(elem).attr("id");
     setData(fPath);
