@@ -8,7 +8,7 @@ let { FitAddon } = require('xterm-addon-fit');
 // Make the terminal's size and geometry fit the size of #terminal-container
 let myMonaco, editor;
 let tabArr={};
-let glp;
+let counter=1;
 require("jstree");
 $(document).ready(async function () {
     editor = await createEditor();
@@ -57,7 +57,6 @@ $(document).ready(async function () {
         }
     }).on("select_node.jstree", function (e, dataObj) {
         let fPath = dataObj.node.id;
-        glp=fPath;
         let isFile = fs.lstatSync(fPath).isFile();
         if (isFile) {
             setData(fPath);
@@ -128,8 +127,12 @@ $(document).ready(async function () {
         isDark = !isDark;
     })
 
+    // mycode
     $("#New").on("click", function (){
-        createNewTab(glp);
+        createNewTab();
+    })
+    $("#Save").on("click", function (){
+        saveI();
     })
 
     // $("#Save").on("click", async function () {
@@ -203,14 +206,17 @@ function createEditor() {
             myMonaco = monaco;
             resolve(editor);
         });
-    })
-    function save() {
-        // get the value of the data
-        var value = window.editor.getValue()
-        saveValueSomewhere(value);     
-     }
-
+    });
+    
 }
+
+function saveI() {
+    getVal = editor.getValue();
+    // get the value of the data
+    alert(getVal);
+}
+
+
 function setData(fPath) {
     let content = fs.readFileSync(fPath, "utf-8");
     // console.log(content);
@@ -220,8 +226,12 @@ function setData(fPath) {
     if (ext == "js") {
         ext = "javascript";
     }
+    // if(ext == ""){
+    //     ext = "plaintext";
+    // }
     myMonaco.editor.setModelLanguage(model, ext);
 }
+
 function createTab(fPath) {
     let fName = path.basename(fPath);
     if (!tabArr[fPath]) {
@@ -233,15 +243,16 @@ function createTab(fPath) {
     }
 }
 
-// function createNewTab(fPath) {
-//     let n = undefined;
-
-//         $("#tabs-row").append(`<div class="tab">
-//         <div class="tab-name" id=${fPath} onclick=handleTab(this)>${n}</div>
-//         <i class="fas fa-times" id=${fPath} onclick=handleClose(this)></i>
-//         </div>`);
-//         createEditor();
-// }
+function createNewTab() {
+    let n = "untitled";
+        
+        $("#tabs-row").append(`<div class="tab">
+        <div class="tab-name" id=${counter} onclick=handleTab12(this)>${n}</div>
+        <i class="fas fa-times" id=${counter} onclick=handleClose12(this)></i>
+        </div>`);
+        createEditor();
+        counter++
+}
 
 function handleTab(elem) {
     let fPath = $(elem).attr("id");
@@ -255,4 +266,18 @@ function handleClose(elem) {
     if (fPath) {
         setData(fPath);
     }
+}
+
+function handleTab12(elem) {
+    let fPath = $(elem).attr("id");
+    // setData(fPath);
+}
+function handleClose12(elem) {
+    let fPath = $(elem).attr("id");
+    // delete tabArr[fPath];
+    $(elem).parent().remove();
+    // fPath = $(".tab .tab-name").eq(0).attr("id");
+    // if (fPath) {
+    //     setData(fPath);
+    // }
 }
