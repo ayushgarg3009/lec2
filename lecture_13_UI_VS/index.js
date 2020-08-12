@@ -8,7 +8,8 @@ let { FitAddon } = require('xterm-addon-fit');
 // Make the terminal's size and geometry fit the size of #terminal-container
 let myMonaco, editor;
 let tabArr={};
-let counter=1;
+let counter=1;  // mycode
+let gpath;  // mycode
 require("jstree");
 $(document).ready(async function () {
     editor = await createEditor();
@@ -62,6 +63,8 @@ $(document).ready(async function () {
             setData(fPath);
             // create Tab
             createTab(fPath);
+            console.log(fPath);
+            gpath=fPath;
         }
     })
 
@@ -131,6 +134,7 @@ $(document).ready(async function () {
     $("#New").on("click", function (){
         createNewTab();
     })
+     // mycode
     $("#Save").on("click", function (){
         saveI();
     })
@@ -210,12 +214,21 @@ function createEditor() {
     
 }
 
+// mycode
 function saveI() {
     getVal = editor.getValue();
     // get the value of the data
     alert(getVal);
+    let p = path.basename(gpath);
+    console.log(p);
+    some(getVal,p)
 }
+ // mycode
+function some(getVal,fPath){
+    let content = fs.writeFileSync(fPath, getVal);
+    console.log("success");
 
+}
 
 function setData(fPath) {
     let content = fs.readFileSync(fPath, "utf-8");
@@ -230,6 +243,7 @@ function setData(fPath) {
     //     ext = "plaintext";
     // }
     myMonaco.editor.setModelLanguage(model, ext);
+    
 }
 
 function createTab(fPath) {
@@ -243,15 +257,16 @@ function createTab(fPath) {
     }
 }
 
+ // mycode
 function createNewTab() {
     let n = "untitled";
         
         $("#tabs-row").append(`<div class="tab">
-        <div class="tab-name" id=${counter} onclick=handleTab12(this)>${n}</div>
+        <div class="tab-name" id=${counter} onclick=handleTab12(this,counter)>${n}</div>
         <i class="fas fa-times" id=${counter} onclick=handleClose12(this)></i>
         </div>`);
-        createEditor();
-        counter++
+        // createEditor();
+        counter++;
 }
 
 function handleTab(elem) {
@@ -266,12 +281,41 @@ function handleClose(elem) {
     if (fPath) {
         setData(fPath);
     }
+    else{
+        let con = "";
+        editor.getModel().setValue(con);
+    }
 }
 
-function handleTab12(elem) {
-    let fPath = $(elem).attr("id");
-    // setData(fPath);
+ // mycode
+function setData12(fPath,counter) {
+    // let content = fs.writeFileSync(fPath, "utf-8");
+    if(fs.existsSync(fPath)){
+        let content = fs.readFileSync(fPath, "utf-8");
+        console.log(content);
+        editor.getModel().setValue(content);
+    }else{
+        let con = "";
+        editor.getModel().setValue(con);
+    }
+    
 }
+
+ // mycode
+function handleTab12(elem,counter) {
+    let fPath = $(elem).attr("id");
+    let pPath = process.cwd();
+    let p = path.join(pPath,fPath)
+    gpath = p;
+    console.log(p);
+    if(p){
+        console.log("pop");
+        setData12(p,counter);
+    }
+    
+}
+
+ // mycode
 function handleClose12(elem) {
     let fPath = $(elem).attr("id");
     // delete tabArr[fPath];
